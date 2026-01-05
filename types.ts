@@ -6,7 +6,8 @@ export enum ToolType {
   MARKET = 'MARKET',
   TEST_LAB = 'TEST_LAB',
   SITE_AUDITOR = 'SITE_AUDITOR',
-  GOOGLE_BUSINESS = 'GOOGLE_BUSINESS'
+  GOOGLE_BUSINESS = 'GOOGLE_BUSINESS',
+  SOCIAL_SEARCH = 'SOCIAL_SEARCH'
 }
 
 export interface Message {
@@ -78,5 +79,18 @@ export interface BusinessProfile {
   location: {
     lat: number;
     lng: number;
+  };
+}
+
+export interface SocialProfileResult {
+  entityName: string;
+  summary: string;
+  profiles: {
+    facebook?: string;
+    instagram?: string;
+    linkedin?: string;
+    twitter?: string;
+    youtube?: string;
+    website?: string;
   };
 }

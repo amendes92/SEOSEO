@@ -7,6 +7,7 @@ import ChartsTool from './components/tools/ChartsTool';
 import ApiTestLab from './components/tools/ApiTestLab';
 import SiteAuditor from './components/tools/SiteAuditor';
 import GoogleBusinessProfile from './components/tools/GoogleBusinessProfile';
+import SocialSearch from './components/tools/SocialSearch';
 import { ToolType } from './types';
 
 const App: React.FC = () => {
@@ -22,6 +23,8 @@ const App: React.FC = () => {
         return <SiteAuditor />;
       case ToolType.GOOGLE_BUSINESS:
         return <GoogleBusinessProfile />;
+      case ToolType.SOCIAL_SEARCH:
+        return <SocialSearch />;
       case ToolType.VISION:
         return <VisionTool />;
       case ToolType.LANGUAGE:

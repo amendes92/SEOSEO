@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Eye, Languages, Briefcase, BarChart3, Cloud, FlaskConical, SearchCheck, Store } from 'lucide-react';
+import { LayoutDashboard, Eye, Languages, Briefcase, BarChart3, Cloud, FlaskConical, SearchCheck, Store, Share2 } from 'lucide-react';
 import { ToolType } from '../types';
 
 interface SidebarProps {
@@ -10,6 +10,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ activeTool, onSelect }) => {
   const menuItems = [
     { id: ToolType.DASHBOARD, label: 'Overview', icon: LayoutDashboard },
+    { id: ToolType.SOCIAL_SEARCH, label: 'Social Radar', icon: Share2 },
     { id: ToolType.GOOGLE_BUSINESS, label: 'Google Meu Negócio', icon: Store },
     { id: ToolType.SITE_AUDITOR, label: 'Site Auditor', icon: SearchCheck },
     { id: ToolType.TEST_LAB, label: 'API Test Lab', icon: FlaskConical },

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { ChartDataPoint, AuditReport, BusinessProfile } from '../types';
+import { ChartDataPoint, AuditReport, BusinessProfile, SocialProfileResult } from '../types';
 
 // Initialize the Gemini client
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -280,7 +280,6 @@ export const getBusinessProfile = async (businessName: string): Promise<Business
     });
 
     let jsonText = response.text || "";
-    // Clean potential markdown code blocks if the model outputs them despite instructions
     jsonText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
 
     if (!jsonText) throw new Error("Empty response from model");
@@ -289,5 +288,53 @@ export const getBusinessProfile = async (businessName: string): Promise<Business
   } catch (error) {
     console.error("Business Profile Error:", error);
     throw new Error("Failed to fetch business profile.");
+  }
+};
+
+/**
+ * Finds social media profiles using Google Search Grounding
+ */
+export const findSocialProfiles = async (query: string): Promise<SocialProfileResult> => {
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: `Find the official social media profiles for "${query}".
+      Look specifically for: Instagram, Facebook, LinkedIn, X (formerly Twitter), and YouTube.
+      Also find the official website if available.
+      Provide a short professional summary of the person or company.
+
+      Output strictly valid JSON (no markdown code blocks) with the following structure:
+      {
+        "entityName": "Corrected Name",
+        "summary": "Brief bio/summary",
+        "profiles": {
+           "instagram": "url_or_null",
+           "facebook": "url_or_null",
+           "linkedin": "url_or_null",
+           "twitter": "url_or_null",
+           "youtube": "url_or_null",
+           "website": "url_or_null"
+        }
+      }
+      Do not include explanations, just the JSON string.`,
+      config: {
+        tools: [{ googleSearch: {} }]
+      }
+    });
+
+    let text = response.text || "{}";
+    // Clean potential markdown
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    
+    // Basic validation to ensure it looks like JSON
+    if (!text.startsWith('{')) {
+       // Fallback simple parsing if model chats instead of returning JSON
+       throw new Error("Invalid JSON format returned");
+    }
+
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Social Search Error", error);
+    throw new Error("Failed to find social profiles.");
   }
 };
